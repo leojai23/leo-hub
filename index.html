@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leo Hub</title>
+<meta name="description" content="One page linking every Leo notebook and app — MBA study notes, interview prep, personal finance, Satvic food and Pranic healing.">
+<meta name="theme-color" content="#3d3567">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script>
+  // no-FOUC theme
+  try {
+    var t = localStorage.getItem('leo-hub-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
+<style>
+:root {
+  --bg: #f5f4f8;
+  --bg-panel: #ffffff;
+  --text: #211f2e;
+  --text-soft: #5c586e;
+  --border: #ded9ea;
+  --accent: #3d3567;
+  --accent-soft: #e2ddf0;
+  --chip-bg: #eceaf4;
+  --chip-text: #4a4468;
+  --shadow: 0 1px 3px rgba(33, 31, 46, 0.09);
+  --shadow-hover: 0 10px 30px rgba(33, 31, 46, 0.14);
+  --g-learn: #3f5ecc;
+  --g-well: #2f8f6b;
+  --g-money: #b7791f;
+  --maxw: 1000px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16151c;
+    --bg-panel: #201f29;
+    --text: #ece9f5;
+    --text-soft: #a6a1b8;
+    --border: #343143;
+    --accent: #a99be6;
+    --accent-soft: #2c2942;
+    --chip-bg: #2a2838;
+    --chip-text: #c7c2da;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --g-learn: #8aa0ef;
+    --g-well: #6fc7a3;
+    --g-money: #e0b060;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #16151c;
+  --bg-panel: #201f29;
+  --text: #ece9f5;
+  --text-soft: #a6a1b8;
+  --border: #343143;
+  --accent: #a99be6;
+  --accent-soft: #2c2942;
+  --chip-bg: #2a2838;
+  --chip-text: #c7c2da;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --g-learn: #8aa0ef;
+  --g-well: #6fc7a3;
+  --g-money: #e0b060;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+header.top {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-panel);
+}
+.top-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.brand { display: flex; align-items: center; gap: 0.85rem; }
+.brand .mark {
+  width: 42px; height: 42px; flex: none;
+  border-radius: 11px;
+  background: var(--accent);
+  color: #fff;
+  display: grid; place-items: center;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.4rem; font-weight: 700;
+}
+:root[data-theme="dark"] .brand .mark,
+:root:not([data-theme="light"]) .brand .mark { color: #1b1a24; }
+.brand h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.brand p { margin: 0.1rem 0 0; font-size: 0.82rem; color: var(--text-soft); }
+
+.theme-btn {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-soft);
+  border-radius: 9px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.theme-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.intro {
+  margin: 2.4rem 0 0.5rem;
+  font-size: 1.02rem;
+  color: var(--text-soft);
+  max-width: 62ch;
+}
+.intro strong { color: var(--text); font-weight: 600; }
+
+.offline-note {
+  margin-top: 1rem;
+  font-size: 0.83rem;
+  color: var(--text-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+}
+.offline-note::before { content: "\2913"; font-size: 0.95rem; }
+
+.group { margin-top: 2.8rem; }
+.group > h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-weight: 700;
+  color: var(--group, var(--accent));
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.group > h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.group.learn { --group: var(--g-learn); }
+.group.well  { --group: var(--g-well); }
+.group.money { --group: var(--g-money); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1.15rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.3rem 1.4rem 1.35rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  overflow: hidden;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--group, var(--accent));
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--group, var(--accent));
+}
+.card h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.16rem;
+  margin: 0 0 0.15rem;
+}
+.card h3 a {
+  color: var(--text);
+  text-decoration: none;
+}
+.card h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.card:hover h3 a { color: var(--group, var(--accent)); }
+.card .host {
+  font-size: 0.76rem;
+  color: var(--text-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all;
+}
+.card .desc {
+  margin: 0.7rem 0 0;
+  font-size: 0.92rem;
+  color: var(--text-soft);
+}
+.card .chips {
+  margin: 0.95rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.card .chips span {
+  font-size: 0.72rem;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
+}
+.card .open {
+  margin-top: 1.05rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--group, var(--accent));
+  letter-spacing: 0.02em;
+}
+.card .open::after { content: " \2192"; }
+.card .fineprint {
+  margin: 0.85rem 0 0;
+  font-size: 0.74rem;
+  color: var(--text-soft);
+  font-style: italic;
+}
+
+footer.foot {
+  margin-top: 3.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.2rem;
+  justify-content: space-between;
+}
+footer.foot a { color: var(--accent); }
+
+@media (max-width: 560px) {
+  .brand p { display: none; }
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <div class="mark">L</div>
+      <div>
+        <h1>Leo Hub</h1>
+        <p>One link to every notebook and app</p>
+      </div>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch theme">&#9681; Theme</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <p class="intro">
+    A single starting point for everything I keep as a web app &mdash;
+    <strong>study notebooks</strong>, <strong>interview prep</strong>,
+    <strong>personal finance</strong>, and <strong>health references</strong>.
+    Every app below is a standalone site; open one and it keeps working offline.
+  </p>
+  <div class="offline-note">All apps are installable and work offline once opened</div>
+
+  <section class="group learn">
+    <h2>Learning</h2>
+    <div class="grid">
+
+      <article class="card">
+        <h3><a href="https://leojai23.github.io/mba-notebook-pwa/">MBA Study Notebook</a></h3>
+        <div class="host">leojai23.github.io/mba-notebook-pwa</div>
+        <p class="desc">
+          Teaching and exam-prep notes for the II-MBA syllabus at Solamalai College
+          of Engineering &mdash; unit-wise, grounded in the prescribed textbooks,
+          with click-to-reveal practice questions.
+        </p>
+        <div class="chips">
+          <span>Strategic Management</span>
+          <span>Banking &amp; Financial Services</span>
+          <span>Payroll</span>
+          <span>Quizzes &amp; flashcards</span>
+          <span>Case studies &amp; CIA papers</span>
+        </div>
+        <div class="open">Open</div>
+      </article>
+
+      <article class="card">
+        <h3><a href="https://leojai23.github.io/leo-interview-notebook-pwa/">Leo Interview Notebook</a></h3>
+        <div class="host">leojai23.github.io/leo-interview-notebook-pwa</div>
+        <p class="desc">
+          My own technical-interview quick reference &mdash; 26 skill areas and
+          ~290 topic pages, each with notes, a cheat sheet, Q&amp;A and
+          basic / intermediate / advanced interview questions.
+        </p>
+        <div class="chips">
+          <span>C / C++ / Shell</span>
+          <span>DS &amp; Algorithms</span>
+          <span>OS / Networking / DB</span>
+          <span>Containers, Docker, K8s</span>
+          <span>Observability</span>
+          <span>Offensive security</span>
+          <span>174 diagrams</span>
+        </div>
+        <div class="open">Open</div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="group well">
+    <h2>Wellbeing</h2>
+    <div class="grid">
+
+      <article class="card">
+        <h3><a href="https://leojai23.github.io/leo-health/">Leo-Health &mdash; Satvic Reference</a></h3>
+        <div class="host">leojai23.github.io/leo-health</div>
+        <p class="desc">
+          Offline reading notebook for the three Satvic Movement books &mdash; food
+          philosophy, kitchen setup, meal plans, the full recipe collection,
+          kids' food and the 3-day juice diet.
+        </p>
+        <div class="chips">
+          <span>Satvic Food</span>
+          <span>Satvic Kids</span>
+          <span>3-Day Juice Diet</span>
+          <span>Recipes</span>
+          <span>Reference only</span>
+        </div>
+        <div class="open">Open</div>
+        <p class="fineprint">Personal study notes from the books, not medical advice.</p>
+      </article>
+
+      <article class="card">
+        <h3><a href="https://leojai23.github.io/leo-healing-study-companion/">Leo Healing Study Companion</a></h3>
+        <div class="host">leojai23.github.io/leo-healing-study-companion</div>
+        <p class="desc">
+          Study companion for Master Choa Kok Sui's Pranic Healing &mdash; energy
+          anatomy, the chakras and their functions, scanning, sweeping and
+          energizing, colour pranas, protocols and psychic self-defence.
+        </p>
+        <div class="chips">
+          <span>Chakras &amp; functions</span>
+          <span>Scanning / sweeping</span>
+          <span>Colour pranas</span>
+          <span>Protocols</span>
+          <span>SuperBrain Yoga</span>
+          <span>Glossary</span>
+        </div>
+        <div class="open">Open</div>
+        <p class="fineprint">Personal study notes from the books, not medical advice.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="group money">
+    <h2>Money</h2>
+    <div class="grid">
+
+      <article class="card">
+        <h3><a href="https://leojai23.github.io/leo-finance-pwa/">Leo-Finance</a></h3>
+        <div class="host">leojai23.github.io/leo-finance-pwa</div>
+        <p class="desc">
+          Single-user personal-finance app (INR). Everything is stored on the
+          device &mdash; no account, no sync &mdash; and a JSON file is the only backup.
+        </p>
+        <div class="chips">
+          <span>Accounts &amp; transactions</span>
+          <span>Credit cards</span>
+          <span>Loans &amp; people</span>
+          <span>Holdings &amp; valuations</span>
+          <span>Budgets &amp; goals</span>
+          <span>Reports</span>
+        </div>
+        <div class="open">Open</div>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Leo Hub &middot; personal projects by Leo</span>
+    <span>Updated 9 September 2026</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('themeBtn');
+  var root = document.documentElement;
+  var order = ['', 'light', 'dark'];
+  var label = { '': '◑ Theme', 'light': '☀ Light', 'dark': '☾ Dark' };
+  function cur() {
+    try { return localStorage.getItem('leo-hub-theme') || ''; } catch (e) { return ''; }
+  }
+  function apply(v) {
+    if (v) root.setAttribute('data-theme', v);
+    else root.removeAttribute('data-theme');
+    btn.innerHTML = label[v];
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', v === 'dark' ? '#16151c' : '#3d3567');
+    try { v ? localStorage.setItem('leo-hub-theme', v) : localStorage.removeItem('leo-hub-theme'); } catch (e) {}
+  }
+  apply(cur());
+  btn.addEventListener('click', function () {
+    var i = order.indexOf(cur());
+    apply(order[(i + 1) % order.length]);
+  });
+})();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
+</script>
+
+</body>
+</html>
