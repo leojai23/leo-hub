@@ -32,6 +32,7 @@
   --g-learn: #3f5ecc;
   --g-well: #2f8f6b;
   --g-money: #b7791f;
+  --g-work: #c96a1f;
   --maxw: 1000px;
 }
 @media (prefers-color-scheme: dark) {
@@ -50,6 +51,7 @@
     --g-learn: #8aa0ef;
     --g-well: #6fc7a3;
     --g-money: #e0b060;
+    --g-work: #e79a4c;
   }
 }
 :root[data-theme="dark"] {
@@ -67,6 +69,7 @@
   --g-learn: #8aa0ef;
   --g-well: #6fc7a3;
   --g-money: #e0b060;
+  --g-work: #e79a4c;
 }
 
 * { box-sizing: border-box; }
@@ -171,6 +174,7 @@ header.top {
 .group.learn { --group: var(--g-learn); }
 .group.well  { --group: var(--g-well); }
 .group.money { --group: var(--g-money); }
+.group.work  { --group: var(--g-work); }
 
 .grid {
   display: grid;
@@ -296,7 +300,8 @@ footer.foot a { color: var(--accent); }
   <p class="intro">
     A single starting point for everything I keep as a web app &mdash;
     <strong>study notebooks</strong>, <strong>interview prep</strong>,
-    <strong>personal finance</strong>, and <strong>health references</strong>.
+    <strong>personal finance</strong>, <strong>health references</strong>,
+    and <strong>office notes</strong>.
     Every app below is a standalone site; open one and it keeps working offline.
   </p>
   <div class="offline-note">All apps are installable and work offline once opened</div>
@@ -417,9 +422,35 @@ footer.foot a { color: var(--accent); }
     </div>
   </section>
 
+  <section class="group work">
+    <h2>Work</h2>
+    <div class="grid">
+
+      <article class="card">
+        <h3><a href="https://leojai23.github.io/leo-focus/">Leo-Focus</a></h3>
+        <div class="host">leojai23.github.io/leo-focus</div>
+        <p class="desc">
+          Office notes where daily targets cascade up through sprint, quarterly
+          and end-goal targets, so it's always visible how today's work connects
+          to the bigger picture.
+        </p>
+        <div class="chips">
+          <span>Daily targets</span>
+          <span>Sprint &amp; quarter targets</span>
+          <span>Progress roll-up</span>
+          <span>Calendar</span>
+          <span>Tags</span>
+          <span>End-of-day review</span>
+        </div>
+        <div class="open">Open</div>
+      </article>
+
+    </div>
+  </section>
+
   <footer class="foot">
     <span>Leo Hub &middot; personal projects by Leo</span>
-    <span>Updated 9 September 2026</span>
+    <span>Updated 22 September 2026</span>
   </footer>
 
 </div>
