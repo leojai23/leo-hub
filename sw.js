@@ -1,5 +1,5 @@
 // Leo Hub service worker — cache-first, offline shell.
-const CACHE = 'leo-hub-274da74bcd';
+const CACHE = 'leo-hub-f1c774da24';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
@@ -27,4 +27,12 @@ self.addEventListener('fetch', (e) => {
       }).catch(() => caches.match('./index.html'))
     )
   );
+});
+
+self.addEventListener('message', (e) => {
+  if (!e.data) return;
+  if (e.data.type === 'SKIP_WAITING') self.skipWaiting();
+  if (e.data.type === 'GET_VERSION' && e.ports && e.ports[0]) {
+    e.ports[0].postMessage({ version: CACHE });
+  }
 });

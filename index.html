@@ -278,6 +278,77 @@ footer.foot a { color: var(--accent); }
   .brand p { display: none; }
   .grid { grid-template-columns: 1fr; }
 }
+
+.header-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+.modal-overlay[hidden] { display: none; }
+.modal {
+  width: 100%;
+  max-width: 340px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-hover);
+  padding: 1.3rem 1.4rem 1.4rem;
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.modal-head h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  margin: 0;
+}
+.modal-x {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--text-soft);
+  padding: 0.1rem 0.3rem;
+}
+.modal-x:hover { color: var(--accent); }
+.modal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.modal-version {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--text);
+  font-size: 0.78rem;
+}
+.modal-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+.modal-btn {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 9px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.modal-btn:hover { border-color: var(--accent); color: var(--accent); }
+.modal-btn-danger:hover { border-color: #c0392b; color: #c0392b; }
 </style>
 </head>
 <body>
@@ -291,9 +362,29 @@ footer.foot a { color: var(--accent); }
         <p>One link to every notebook and app</p>
       </div>
     </div>
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch theme">&#9681; Theme</button>
+    <div class="header-actions">
+      <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch theme">&#9681; Theme</button>
+      <button class="theme-btn" id="settingsBtn" type="button" aria-label="Settings">&#9881;</button>
+    </div>
   </div>
 </header>
+
+<div class="modal-overlay" id="settingsModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-head">
+      <h2 id="settingsTitle">Settings</h2>
+      <button class="modal-x" id="settingsCloseBtn" type="button" aria-label="Close settings">&times;</button>
+    </div>
+    <div class="modal-row">
+      <span>Version</span>
+      <span class="modal-version" id="settingsVersion">&hellip;</span>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" id="checkUpdatesBtn" type="button">Check for updates</button>
+      <button class="modal-btn modal-btn-danger" id="closeAppBtn" type="button">Close app</button>
+    </div>
+  </div>
+</div>
 
 <div class="wrap">
 
@@ -520,6 +611,82 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function () {});
   });
 }
+
+(function () {
+  var __intentionalClose = false;
+  window.addEventListener('beforeunload', function (e) {
+    if (__intentionalClose) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+  window.__confirmAppClose = function () {
+    if (confirm('Close Leo Hub? Your data is already saved automatically.')) {
+      __intentionalClose = true;
+      window.close();
+    }
+  };
+
+  window.__checkForUpdates = function () {
+    if (!('serviceWorker' in navigator)) { alert('Service workers are not supported in this browser.'); return; }
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+      if (!reg) { alert('No service worker registered.'); return; }
+      reg.update().then(function () {
+        if (reg.waiting) {
+          reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          reg.waiting.addEventListener('statechange', function () {
+            if (reg.waiting === null) location.reload();
+          });
+        } else {
+          alert("You're on the latest version.");
+        }
+      });
+    });
+  };
+
+  function showVersion() {
+    var el = document.getElementById('settingsVersion');
+    if (!el) return;
+    el.textContent = '…';
+    if (!('serviceWorker' in navigator)) { el.textContent = 'unavailable'; return; }
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+      var sw = reg && (reg.active || reg.waiting || reg.installing);
+      if (!sw) { el.textContent = 'not registered'; return; }
+      var done = false;
+      var mc = new MessageChannel();
+      mc.port1.onmessage = function (e) {
+        if (done) return;
+        done = true;
+        el.textContent = (e.data && e.data.version) || 'unknown';
+      };
+      sw.postMessage({ type: 'GET_VERSION' }, [mc.port2]);
+      setTimeout(function () {
+        if (!done) { done = true; el.textContent = 'unknown'; }
+      }, 1500);
+    }).catch(function () { el.textContent = 'unknown'; });
+  }
+
+  var settingsBtn = document.getElementById('settingsBtn');
+  var settingsModal = document.getElementById('settingsModal');
+  var settingsCloseBtn = document.getElementById('settingsCloseBtn');
+  var checkUpdatesBtn = document.getElementById('checkUpdatesBtn');
+  var closeAppBtn = document.getElementById('closeAppBtn');
+
+  function openSettings() {
+    settingsModal.hidden = false;
+    showVersion();
+  }
+  function closeSettings() {
+    settingsModal.hidden = true;
+  }
+
+  settingsBtn.addEventListener('click', openSettings);
+  settingsCloseBtn.addEventListener('click', closeSettings);
+  settingsModal.addEventListener('click', function (e) {
+    if (e.target === settingsModal) closeSettings();
+  });
+  checkUpdatesBtn.addEventListener('click', window.__checkForUpdates);
+  closeAppBtn.addEventListener('click', window.__confirmAppClose);
+})();
 </script>
 
 </body>

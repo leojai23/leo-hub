@@ -72,6 +72,14 @@ self.addEventListener('fetch', (e) => {{
     )
   );
 }});
+
+self.addEventListener('message', (e) => {{
+  if (!e.data) return;
+  if (e.data.type === 'SKIP_WAITING') self.skipWaiting();
+  if (e.data.type === 'GET_VERSION' && e.ports && e.ports[0]) {{
+    e.ports[0].postMessage({{ version: CACHE }});
+  }}
+}});
 """
     (HERE / "sw.js").write_text(sw, encoding="utf-8")
     print(f"wrote sw.js (CACHE = leo-hub-{digest})")
