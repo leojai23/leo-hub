@@ -7,6 +7,7 @@ One page that links to every Leo notebook and app. Live at
 | --- | --- |
 | MBA Study Notebook | https://leojai23.github.io/mba-notebook-pwa/ |
 | Leo Interview Notebook | https://leojai23.github.io/leo-interview-notebook-pwa/ |
+| Electronics Study Notebook | https://leojai23.github.io/electronics-notebook/ |
 | Leo-Health — Satvic Reference | https://leojai23.github.io/leo-health/ |
 | Leo Healing Study Companion | https://leojai23.github.io/leo-healing-study-companion/ |
 | Leo-Finance | https://leojai23.github.io/leo-finance-pwa/ |
